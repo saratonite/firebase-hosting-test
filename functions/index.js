@@ -12,10 +12,17 @@ const firebase = require('firebase-admin')
 const firebaseApp = firebase.initializeApp( functions.config().firebase ) 
 
 function getQuotes() {
-    const ref = firebaseApp.database().ref('qoutes')
+    const ref = firebaseApp.database().ref('quotes')
 
     return ref.once('value').then( snap => snap.val())
 }
+
+function addQoute(data) {
+
+    const ref = firebaseApp.database().ref('quotes')
+    return ref.push({text:'Good morning'})
+}
+
 
 const express = require('express')
 
@@ -30,7 +37,7 @@ application.get('/app', (req,res) => {
         luck: _value,
         timestamp: Date.now()
     }
-    //
+    
 
     getQuotes().then(data => {
 
@@ -39,5 +46,7 @@ application.get('/app', (req,res) => {
     })
    
 })
+
+
 
 exports.app = functions.https.onRequest(application);
